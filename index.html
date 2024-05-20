@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin: 2% auto;
+      width: 80%;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.5);
+    }
+
+    .num {
+      font-size: 30px;
+    }
+
+    .totalCost {
+      margin-right: 5%;
+      color: rgb(255, 106, 0);
+
+    }
+
+    .buy {
+      margin-left: 0%;
+    }
+
+    .total {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .total button {
+      background-color: rgb(255, 106, 0);
+      color: white;
+      width: 180px;
+
+      font-size: 18px;
+      border: 0px solid rgb(255, 106, 0);
+      ;
+      height: 50px;
+    }
+
+    .select {
+      margin-left: 8%;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid rgb(255, 106, 0);
+      ;
+      height: 100px;
+    }
+
+    .header img {
+      margin-left: 20px;
+      height: 60px;
+      margin: 120px;
+    }
+
+    .text {
+      display: flex;
+      align-items: center;
+    }
+
+    .text h2,
+    .text h5 {
+      margin: 10px;
+    }
+
+    .text h4 {
+      margin-left: 600px;
+    }
+
+
+
+    .total {
+      display: flex;
+
+      align-items: center;
+      height: 50px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      /* 添加浅色背景阴影 */
+      margin: 5px;
+
+    }
+
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      /* 添加浅色背景阴影 */
+      margin: 5px;
+    }
+
+    .selectAll {
+      margin-left: 0px;
+    }
+
+    .product-name {
+      margin-left: 13%;
+    }
+
+    .price {
+      margin-left: 23%;
+    }
+
+    .quantity {
+      margin-left: 8%;
+    }
+
+    .subtotal {
+      margin-left: 8%;
+    }
+
+    .action {
+      margin-left: 10%;
+    }
+
+    .product-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 5px;
+    }
+
+    .product-item input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .product-item div {
+      flex: 1;
+    }
+
+    .quantity-input {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      width: 30px;
+    }
+
+    .quantity-input button {
+      padding: 5px 10px;
+      background-color: #f0f0f0;
+      border: none;
+      cursor: pointer;
+    }
+
+    .quantity-input input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      margin: 0 20px;
+    }
+
+    .orange {
+      color: rgb(255, 106, 0);
+      ;
+      margin-left: 8%;
+    }
+
+    .product-item button {
+      padding: 5px 10px;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .goods {
+      height: 6%;
+      width: 6%;
+      margin-left: 7.5%;
+    }
+
+    .goodname {
+      margin-left: 6%;
+    }
+
+    .goodprice {
+      margin-left: 21.5%;
+    }
+
+    .goodquantity {
+      margin-left: 20%;
+    }
+
+    .goodaction {
+      margin-left: 60%;
+    }
+
+    .close {
+      width: 13px;
+      height: 13px;
+    }
+
+    .jian {
+      color: rgb(255, 106, 0);
+      ;
+    }
+    
+    input[type="checkbox"]:checked {
+      filter: sepia(100%) saturate(10);
+    }
+  </style>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="header">
+      <img src="./images/mi.png">
+      <div class="text">
+        <h2>我的购物车</h2>
+        <h5>温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</h5>
+        <h4>我的订单</h4>
+      </div>
+    </div>
+  </header>
+  <div id="app" class="container">
+    <table>
+      <div class="product-header">
+        <label><input type="checkbox" class="selectAll" v-model="selectAll" @change="selectAllItems">&nbsp;全选</label>
+        <span class="product-name">商品名称</span>
+        <span class="price">单价</span>
+        <span class="quantity">数量</span>
+        <span class="subtotal">小计</span>
+        <span class="action">操作</span>
+      </div>
+      <div v-for="item in cart" :key="item.name" class="product-item">
+        <input type="checkbox" v-model="item.selected" @change="updateSelectAll" class="selectAll">
+        <img :src="item.img" class="goods">
+        <div class="goodname">{{ item.name }}</div>
+        <div class="goodprice">{{ item.price }}元</div>
+        <div class="quantity-input">
+          <button @click="decrementQuantity(item)" style="flex: 0;">-</button>
+          <input type="number" v-model.number="item.quantity" min="1" class="goodquantity">
+          <button @click="incrementQuantity(item)" style="flex: 1;">+</button>
+        </div>
+        <div class="orange">{{ item.total }}元</div>
+        <div><button @click="del(item.name)" class="goodaction"><img src="./images/xx.png" class="close"></button></div>
+      </div>
+    </table>
+    <div class="total">
+      <span class="buy">继续购物</span>
+      <span class="select">已选择<span class="jian">{{selectedItemCount}}</span>件</span>
+      <div style="flex: 1;"></div>
+      <span class="totalCost">合计:<span class="num">{{ totalCost }}</span> 元</span>
+      <button class="qujiesuan">去结算</button>
+    </div>
+  </div>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          cart: [
+            { name: '小米手环7 夜月黑', price: 219, quantity: 2, total: '219', selected: true, img: './images/watch.png' },
+            { name: 'Redmi电竞路由器', price: 549, quantity: 1, total: '549', selected: true, img: './images/luyouqi.png' },
+            { name: '声波电动牙刷头', price: 69, quantity: 1, total: '69', selected: true, img: './images/teeth.png' },
+
+          ],
+          selectAll: true,
+          flag: true
+        }
+      },
+      computed: {
+        totalCost() {
+          return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        },
+        selectedItemCount() {
+          return this.cart.reduce((count, item) => (item.selected ? count + item.quantity : count), 0);
+        }
+      },
+      methods: {
+        updateTotal(item) {
+          item.total = item.price * item.quantity;
+        },
+        selectAllItems() {
+          this.cart.forEach(item => item.selected = this.selectAll);
+        },
+        updateSelectAll() {
+          this.selectAll = this.cart.every(item => item.selected);
+        },
+        del(name) {
+          this.cart = this.cart.filter(item => item.name !== name);
+        },
+        incrementQuantity(item) {
+          item.quantity++;
+          this.updateTotal(item);
+        },
+        decrementQuantity(item) {
+          if (item.quantity > 1) {
+            item.quantity--;
+            this.updateTotal(item);
+          }
+        }
+      }
+    })
+
+    const vm = app.mount('#app')
+  </script>
+</body>
+
+</html>
